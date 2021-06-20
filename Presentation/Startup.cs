@@ -34,13 +34,16 @@ namespace Presentation
                     b => b.MigrationsAssembly(typeof(AppDbContext).Assembly.FullName));
             });
 
-            services.AddIdentity<User, IdentityRole>(options => {
+            services.AddIdentity<User, IdentityRole>(options =>
+            {
                 options.Password.RequireDigit = false;
                 options.Password.RequiredLength = 6;
                 options.Password.RequireNonAlphanumeric = false;
                 options.Password.RequireLowercase = false;
                 options.Password.RequireUppercase = false;
-            }).AddEntityFrameworkStores<AppDbContext>();
+            })
+                .AddEntityFrameworkStores<AppDbContext>()
+                .AddDefaultTokenProviders();
 
             services.ConfigureApplicationCookie(options => {
                 options.LoginPath = "/Auth/Login";

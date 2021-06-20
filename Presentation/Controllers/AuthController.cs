@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Presentation.Models.Auth;
 using SignInResult = Microsoft.AspNetCore.Identity.SignInResult;
 using BusinessLogic.Models;
+using Presentation.Models;
 
 namespace Presentation.Controllers
 {
@@ -15,7 +16,10 @@ namespace Presentation.Controllers
         private readonly UserManager<User> userManager;
         private readonly SignInManager<User> signInManager;
 
-        public AuthController(UserManager<User> userManager, SignInManager<User> signInManager)
+        public AuthController(
+            UserManager<User> userManager, 
+            SignInManager<User> signInManager
+        )
         {
             this.userManager = userManager;
             this.signInManager = signInManager;
@@ -41,8 +45,17 @@ namespace Presentation.Controllers
 
                 if (result.Succeeded)
                 {
-                    await signInManager.SignInAsync(user, isPersistent: false); 
-                    return RedirectToAction("index", "home");
+                    string token = await userManager.GenerateEmailConfirmationTokenAsync(user);
+                    string confirmationLink = 
+                        Url.Action("ConfirmEmail", "Auth", 
+                            new { userId = user.Id, token = token }, Request.Scheme);
+
+                    //send confirmationLink
+
+                    string errorTitle = "Registration successful";
+                    string errorMessage = 
+                        $"Please confirm your email by clicking on the link we sent you at {model.Email}.";
+                    return View("Error", new ErrorViewModel { Title = errorTitle, Error = errorMessage, Link = confirmationLink });
                 }
 
                 foreach (IdentityError error in result.Errors)
@@ -64,6 +77,18 @@ namespace Presentation.Controllers
         {
             if (ModelState.IsValid)
             {
+                User user = await userManager.FindByEmailAsync(model.Email);
+
+                if (
+                    user != null  && 
+                    !user.EmailConfirmed && 
+                    (await userManager.CheckPasswordAsync(user, model.Password))
+                )
+                {
+                    ModelState.AddModelError(string.Empty, "Email not confirmed yet");
+                    return View(model);
+                }
+
                 SignInResult signInResult = await signInManager.PasswordSignInAsync(
                     model.Email, model.Password, isPersistent: false, lockoutOnFailure: false);
 
@@ -88,6 +113,29 @@ namespace Presentation.Controllers
         {
             await signInManager.SignOutAsync();
             return RedirectToAction("index", "home");
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> ConfirmEmail(string userId, string token)
+        {
+            if (userId == null || token == null)
+            {
+                return RedirectToAction("index", "home");
+            }
+
+            User user = await userManager.FindByIdAsync(userId);
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            IdentityResult result = await userManager.ConfirmEmailAsync(user, token);
+            if (result.Succeeded)
+            {
+                return View();
+            }
+
+            return View("Error", new ErrorViewModel { Title = "Confirmation Error", Error = "Email cannot be confirmed" });
         }
 
         public async Task<IActionResult> IsEmailTaken(string email)
