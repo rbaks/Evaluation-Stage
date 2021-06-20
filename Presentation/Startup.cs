@@ -12,6 +12,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Presentation.Settings;
+using Presentation.Utils.Services;
 
 namespace Presentation
 {
@@ -49,6 +51,9 @@ namespace Presentation
                 options.LoginPath = "/Auth/Login";
             });
 
+            services.Configure<MailSettings>(Configuration.GetSection("MailSettings"));
+
+            services.AddTransient<IMailService, MailService>();
 
             services.AddControllersWithViews();
             services.AddRazorPages();

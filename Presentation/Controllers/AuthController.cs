@@ -8,6 +8,7 @@ using Presentation.Models.Auth;
 using SignInResult = Microsoft.AspNetCore.Identity.SignInResult;
 using BusinessLogic.Models;
 using Presentation.Models;
+using Presentation.Utils.Services;
 
 namespace Presentation.Controllers
 {
@@ -15,14 +16,17 @@ namespace Presentation.Controllers
     {
         private readonly UserManager<User> userManager;
         private readonly SignInManager<User> signInManager;
+        private readonly IMailService mailService;
 
         public AuthController(
             UserManager<User> userManager, 
-            SignInManager<User> signInManager
+            SignInManager<User> signInManager,
+            IMailService mailService
         )
         {
             this.userManager = userManager;
             this.signInManager = signInManager;
+            this.mailService = mailService;
         }
 
         [HttpGet]
@@ -51,6 +55,11 @@ namespace Presentation.Controllers
                             new { userId = user.Id, token = token }, Request.Scheme);
 
                     //send confirmationLink
+                    await mailService.SendEmailAsync(
+                        new MailRequest { 
+                            Subject = "Email Confirmation", 
+                            ToEmail = model.Email, 
+                            Body = $"Click on <a href='{confirmationLink}'>this link</a> to confirm your account." });
 
                     string errorTitle = "Registration successful";
                     string errorMessage = 
