@@ -1,0 +1,47 @@
+﻿@model IEnumerable<BusinessLogic.Models.State>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Liste des Etats de routes</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Label)
+            </th>
+            <th class="text-right">
+                @Html.DisplayNameFor(model => model.PerKmCost)
+            </th>
+            <th class="text-right">
+                @Html.DisplayNameFor(model => model.PerKmDuration)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Label)
+            </td>
+            <td class="text-right">
+                @Html.DisplayFor(modelItem => item.PerKmCost)
+            </td>
+            <td class="text-right">
+                @Html.DisplayFor(modelItem => item.PerKmDuration)
+            </td>
+            <td class="text-right">
+                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

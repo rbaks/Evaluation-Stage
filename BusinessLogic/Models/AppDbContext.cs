@@ -19,5 +19,9 @@ namespace BusinessLogic.Models
         }
 
         public virtual DbSet<Customer> Customers { get; set; }
+        public virtual DbSet<City> Cities { get; set; }
+        public virtual DbSet<Portion> Portions { get; set; }
+        public virtual DbSet<Route> Routes { get; set; }
+        public virtual DbSet<State> States { get; set; }
     }
 }
