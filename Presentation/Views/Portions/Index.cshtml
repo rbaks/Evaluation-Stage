@@ -9,17 +9,17 @@
 <p>
     <a asp-action="Create">Create New</a>
 </p>
-<table class="table">
+<table class="table table-hover">
     <thead>
         <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Route)
+            </th>
             <th>
                 @Html.DisplayNameFor(model => model.StartPortion)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.EndPortion)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Route)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.State)
@@ -31,13 +31,13 @@
 @foreach (var item in Model) {
         <tr>
             <td>
+                @Html.DisplayFor(modelItem => item.Route.Name)
+            </td>
+            <td>
                 @Html.DisplayFor(modelItem => item.StartPortion)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.EndPortion)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Route.Name)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.State.Label)

@@ -32,6 +32,11 @@ namespace BusinessLogic.Models
         [Column("perKmDuration", TypeName = "decimal(10, 2)")]
         public decimal PerKmDuration { get; set; }
 
+        [Display(Name = "Coefficient de dégradation (/Km)")]
+        [DisplayFormat(DataFormatString = "{0} %")]
+        [Column("coeffDeg", TypeName = "decimal(10, 2)")]
+        public decimal CoeffDeg { get; set; }
+
         [InverseProperty(nameof(Portion.State))]
         public virtual ICollection<Portion> Portions { get; set; }
     }

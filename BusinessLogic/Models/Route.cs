@@ -32,6 +32,7 @@ namespace BusinessLogic.Models
         [Column("kmlength", TypeName = "decimal(5, 2)")]
         [Display(Name = "Longueur (Km)")]
         [DisplayFormat(DataFormatString = "{0:N}")]
+        [Range(0, int.MaxValue)]
         public decimal Kmlength { get; set; }
 
         [Display(Name = "Ville d'arrivé")]
@@ -45,5 +46,14 @@ namespace BusinessLogic.Models
         public virtual City StartCityNavigation { get; set; }
         [InverseProperty(nameof(Portion.Route))]
         public virtual ICollection<Portion> Portions { get; set; }
+
+/*        public decimal GetEtatGlobal()
+        {
+            foreach (Portion portion in Portions)
+            {
+                portion.State.
+            }
+            return 1;
+        }*/
     }
 }

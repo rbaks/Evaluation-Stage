@@ -62,9 +62,35 @@ namespace Presentation.Controllers
         {
             if (ModelState.IsValid)
             {
-                _context.Add(portion);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                Route route = await _context.Routes
+                    .Include(r => r.Portions)
+                    .FirstOrDefaultAsync(r => r.Id == portion.RouteId);
+
+                if (
+                    portion.StartPortion <= route.Kmlength && 
+                    portion.EndPortion <= route.Kmlength &&
+                    portion.StartPortion <= portion.EndPortion &&
+                    (portion.StartPortion >= 0 && portion.EndPortion >= 0)
+                )
+                {
+                    Portion latestPortion = route.Portions.Last();
+                    if (latestPortion.EndPortion <= portion.StartPortion)
+                    {
+                        _context.Add(portion);
+                        await _context.SaveChangesAsync();
+                        return RedirectToAction(nameof(Index));
+                    }
+                    else
+                    {
+                        ModelState.AddModelError(string.Empty, "Données entrées incohérents.");
+                        return View(portion);
+                    }
+                }
+                else
+                {
+                    ModelState.AddModelError(string.Empty, "Données entrées non valides.");
+                    return View(portion);
+                }
             }
             ViewData["RouteId"] = new SelectList(_context.Routes, "Id", "Name", portion.RouteId);
             ViewData["StateId"] = new SelectList(_context.States, "Id", "Label", portion.StateId);
