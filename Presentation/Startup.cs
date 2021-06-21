@@ -6,6 +6,7 @@ using BusinessLogic.Models;
 using DataAccess;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -30,7 +31,7 @@ namespace Presentation
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddTransient(typeof(IRepository<>), typeof(SqlRepository<>));
-            services.AddDbContext<AppDbContext>(options => {
+            services.AddDbContextPool<AppDbContext>(options => {
                 options.UseSqlServer(
                     Configuration.GetConnectionString("Default"),
                     b => b.MigrationsAssembly(typeof(AppDbContext).Assembly.FullName));
@@ -49,6 +50,7 @@ namespace Presentation
 
             services.ConfigureApplicationCookie(options => {
                 options.LoginPath = "/Auth/Login";
+                options.AccessDeniedPath = new PathString("/Auth/Login");
             });
 
             services.Configure<MailSettings>(Configuration.GetSection("MailSettings"));

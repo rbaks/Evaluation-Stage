@@ -11,11 +11,11 @@ namespace DataAccess
     {
         private readonly AppDbContext _context = null;
         private readonly DbSet<T> table = null;
-        public SqlRepository()
+/*        public SqlRepository()
         {
             this._context = new AppDbContext();
             table = _context.Set<T>();
-        }
+        }*/
         public SqlRepository(AppDbContext context)
         {
             this._context = context;

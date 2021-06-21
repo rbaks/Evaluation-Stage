@@ -16,6 +16,8 @@ using DataAccess;
 
 namespace Presentation.Controllers
 {
+
+    [Authorize]
     public class EtatController : BaseController
     {
         private readonly AppDbContext _context;

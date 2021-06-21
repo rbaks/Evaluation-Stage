@@ -6,9 +6,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using BusinessLogic.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Presentation.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class RoutesController : Controller
     {
         private readonly AppDbContext _context;
@@ -36,6 +38,7 @@ namespace Presentation.Controllers
             var route = await _context.Routes
                 .Include(r => r.EndCityNavigation)
                 .Include(r => r.StartCityNavigation)
+                .Include(r => r.Portions)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (route == null)
             {

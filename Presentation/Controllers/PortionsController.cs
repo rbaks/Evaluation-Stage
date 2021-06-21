@@ -6,9 +6,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using BusinessLogic.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Presentation.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class PortionsController : Controller
     {
         private readonly AppDbContext _context;
@@ -62,7 +64,7 @@ namespace Presentation.Controllers
         {
             if (ModelState.IsValid)
             {
-                Route route = await _context.Routes
+/*                Route route = await _context.Routes
                     .Include(r => r.Portions)
                     .FirstOrDefaultAsync(r => r.Id == portion.RouteId);
 
@@ -75,11 +77,11 @@ namespace Presentation.Controllers
                 {
                     Portion latestPortion = route.Portions.Last();
                     if (latestPortion.EndPortion <= portion.StartPortion)
-                    {
+                    {*/
                         _context.Add(portion);
                         await _context.SaveChangesAsync();
                         return RedirectToAction(nameof(Index));
-                    }
+               /*     }
                     else
                     {
                         ModelState.AddModelError(string.Empty, "Données entrées incohérents.");
@@ -90,7 +92,7 @@ namespace Presentation.Controllers
                 {
                     ModelState.AddModelError(string.Empty, "Données entrées non valides.");
                     return View(portion);
-                }
+                }*/
             }
             ViewData["RouteId"] = new SelectList(_context.Routes, "Id", "Name", portion.RouteId);
             ViewData["StateId"] = new SelectList(_context.States, "Id", "Label", portion.StateId);

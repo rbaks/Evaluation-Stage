@@ -4,10 +4,12 @@ using System.Linq;
 using System.Linq.Dynamic;
 using System.Threading.Tasks;
 using BusinessLogic.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Presentation.Controllers
 {
+    [Authorize]
     public class EtatGlobalController : Controller
     {
         private readonly AppDbContext _context;

@@ -10,31 +10,65 @@
     <h4>Route</h4>
     <hr />
     <dl class="row">
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Name)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Name)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Kmlength)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Kmlength)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.EndCityNavigation)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.EndCityNavigation.Name)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.StartCityNavigation)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.StartCityNavigation.Name)
         </dd>
     </dl>
+
+    <h4 class="display-4">Etat des portions</h4>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Portions.First().StartPortion)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Portions.First().EndPortion)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Portions.First().State)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Portions)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.StartPortion)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.EndPortion)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.State.Label)
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
 </div>
 <div>
     <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |

@@ -6,9 +6,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using BusinessLogic.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Presentation.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class StatesController : Controller
     {
         private readonly AppDbContext _context;

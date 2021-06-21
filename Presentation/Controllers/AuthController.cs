@@ -88,15 +88,15 @@ namespace Presentation.Controllers
             {
                 User user = await userManager.FindByEmailAsync(model.Email);
 
-                if (
-                    user != null  && 
-                    !user.EmailConfirmed && 
-                    (await userManager.CheckPasswordAsync(user, model.Password))
+/*                if (
+                    user != null
+                    && !user.EmailConfirmed
+                    && (await userManager.CheckPasswordAsync(user, model.Password))
                 )
                 {
                     ModelState.AddModelError(string.Empty, "Email not confirmed yet");
                     return View(model);
-                }
+                }*/
 
                 SignInResult signInResult = await signInManager.PasswordSignInAsync(
                     model.Email, model.Password, isPersistent: false, lockoutOnFailure: false);
@@ -156,7 +156,7 @@ namespace Presentation.Controllers
             } 
             else
             {
-                return Json($"Email ${email} is arleady taken.");
+                return Json($"l'email ${email} est déjà pris.");
             }
         }
     }

@@ -1,0 +1,48 @@
+﻿@using Microsoft.AspNetCore.Identity
+@model IEnumerable<BusinessLogic.Models.User>
+@inject UserManager<BusinessLogic.Models.User> UserManager
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Liste des Utilisateurs</h1>
+
+<p>
+    <a asp-action="Create">Nouvel Utilisateur</a>
+</p>
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.First().Email)
+            </th>
+            <th>
+                Roles
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Email)
+                </td>
+                <td>
+                    @foreach (var role in (await UserManager.GetRolesAsync(item)))
+                    {
+                        @Html.DisplayFor(modelItem => role)
+                    }
+                </td>
+                <td>
+                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+
+
