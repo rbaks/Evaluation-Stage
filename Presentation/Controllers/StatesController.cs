@@ -53,13 +53,22 @@ namespace Presentation.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Label,PerKmCost,PerKmDuration")] State state)
+        public async Task<IActionResult> Create([Bind("Id,Label,PerKmCost,PerKmDuration,CoeffDeg")] State state)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(state);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                if (state.CoeffDeg <= 0 && state.CoeffDeg <= 1)
+                {
+                    _context.Add(state);
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
+                }
+                else
+                {
+                    ModelState.AddModelError(string.Empty, "Données entrées non valides.");
+                    return View(state);
+                }
+
             }
             return View(state);
         }

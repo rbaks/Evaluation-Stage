@@ -16,13 +16,13 @@ using DataAccess;
 
 namespace Presentation.Controllers
 {
-    public class CustomersController : BaseController
+    public class EtatController : BaseController
     {
         private readonly AppDbContext _context;
         private readonly IRepository<Customer> repository;
         private readonly IWebHostEnvironment webHostEnvironment;
 
-        public CustomersController(
+        public EtatController(
             AppDbContext context, 
             IRepository<Customer> repository,
             IWebHostEnvironment webHostEnvironment
@@ -36,7 +36,7 @@ namespace Presentation.Controllers
         // GET: Customers
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Customers.ToListAsync());
+            return View();
         }
 
         // POST: Customers/LoadData
@@ -54,17 +54,15 @@ namespace Presentation.Controllers
                 int pageSize = length != null ? Convert.ToInt32(length) : 0;
                 int skip = start != null ? Convert.ToInt32(start) : 0;
                 int recordsTotal = 0;
-                var customerData = _context.Customers.AsQueryable();
+                var customerData = _context.Etats.AsQueryable();
                 if (!(string.IsNullOrEmpty(sortColumn) && string.IsNullOrEmpty(sortColumnDirection)))
                 {
                     customerData = customerData.OrderBy(sortColumn + " " + sortColumnDirection);
                 }
                 if (!string.IsNullOrEmpty(searchValue))
                 {
-                    customerData = customerData.Where(m => m.FirstName.Contains(searchValue)
-                                                || m.LastName.Contains(searchValue)
-                                                || m.Contact.Contains(searchValue)
-                                                || m.Email.Contains(searchValue));
+                    customerData = customerData.Where(m => m.Depart.Contains(searchValue)
+                                                || m.Arrive.Contains(searchValue));
                 }
                 recordsTotal = customerData.Count();
                 var data = customerData.Skip(skip).Take(pageSize).ToList();

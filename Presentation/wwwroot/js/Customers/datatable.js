@@ -11,30 +11,22 @@
         "serverSide": true,
         "filter": true,
         "ajax": {
-            "url": "Customers/LoadData",
+            "url": "Etat/LoadData",
             "type": "POST",
             "datatype": "json"
         },
         "columnDefs": [
-            {
+            /*{
                 "targets": [0],
                 "visible": false,
                 "searchable": false
-            },
-            {
-                "targets": 5,
-                "className" : "text-right"
-            }],
+            }*/],
         "columns": [
-            { "data": "id", "name": "Id", "autoWidth": true },
-            { "data": "firstName", "name": "FirstName", "autoWidth": true },
-            { "data": "lastName", "name": "LastName", "autoWidth": true },
-            { "data": "contact", "name": "Country", "autoWidth": true },
-            { "data": "email", "name": "Email", "autoWidth": true },
-            { "data": "dateOfBirth", "name": "DateOfBirth", "autoWidth": true },
-            {
-                "render": function (data, type, row) { return `<a href='Customers/Edit/${row.id}'>modif</a> | <a href='Customers/Delete/${row.id}'>suppr</a>`; }
-            },
+/*            { "data": "routeid", "name": "RouteId", "autoWidth": true },*/
+            { "data": "name", "name": "Name", "autoWidth": true },
+            { "data": "depart", "name": "Depart", "autoWidth": true },
+            { "data": "arrive", "name": "Arrive", "autoWidth": true },
+            { "data": "etatglobal", "name": "Etatglobal", "autoWidth": true }
         ]
     });
 });  

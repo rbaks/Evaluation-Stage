@@ -12,12 +12,12 @@ namespace BusinessLogic.Models
 
         [Column("start_portion", TypeName = "decimal(5, 2)")]
         [Display(Name = "Debut")]
-        [Range(1, int.MaxValue, ErrorMessage = "la borne doit étre positive")]
+        [Range(0, int.MaxValue, ErrorMessage = "la borne doit étre positive")]
         public decimal StartPortion { get; set; }
 
         [Column("end_portion", TypeName = "decimal(5, 2)")]
         [Display(Name = "Fin")]
-        [Range(1, int.MaxValue, ErrorMessage = "la borne doit étre positive")]
+        [Range(0, int.MaxValue, ErrorMessage = "la borne doit étre positive")]
         public decimal EndPortion { get; set; }
         [Column("route_id")]
         public int RouteId { get; set; }

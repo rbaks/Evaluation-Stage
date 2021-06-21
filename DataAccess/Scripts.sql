@@ -54,10 +54,24 @@ ADD UNIQUE (start_portion, end_portion, route_id);
 go
 
 ALTER TABLE State
-ADD CHECK (coeffDeg >= 0 and coeffDeg <= 1);
+ADD CHECK (coeffDeg >= 0 and coeffDeg <= 100);
 go
 
-CREATE OR ALTER VIEW V_Route AS SELECT Route.id as route_id, Route.name, cd.id c_dep_id, cd.name depart, ca.id c_arr_id, ca.name arrive, kmlength FROM Route JOIN City cd ON Route.start_city = cd.id JOIN City ca ON Route.end_city = ca.id
+ALTER TABLE State DROP Column coeffDeg;
 go
 
-SELECT r.*, coalesce(p.id, 0) portion_id, coalesce(p.state_id, 0) state_id FROM V_Route r LEFT JOIN Portion p ON r.route_id = p.route_id
+CREATE OR ALTER VIEW V_Route AS SELECT Route.id as route_id, Route.name, cd.name depart, ca.name arrive, kmlength FROM Route JOIN City cd ON Route.start_city = cd.id JOIN City ca ON Route.end_city = ca.id
+go
+
+UPDATE State SET coeffDeg = 80 WHERE id = 4;
+go
+
+CREATE OR ALTER VIEW v_data AS SELECT r.*, coalesce(p.id, 0) portion_id, coalesce(p.state_id, 0) state_id, coalesce(s.coeffDeg, 0) coeff, (coalesce(p.end_portion, 0) - coalesce(p.start_portion, 0)) lg FROM V_Route r LEFT JOIN Portion p ON r.route_id = p.route_id LEFT JOIN state s ON p.state_id = s.id
+go
+
+CREATE OR ALTER VIEW v_data_sum AS SELECT route_id, name, depart, arrive, SUM(lg) smlg, kmlength, (SUM(coeff * lg)) etat_gloabal FROM v_data GROUP BY route_id, name, depart, arrive, kmlength;
+go
+
+CREATE OR ALTER VIEW Etat AS SELECT CONCAT(route_id, " ") routeid, name, depart, arrive, CASE WHEN smlg = 0 THEN "--" ELSE CONCAT((etat_gloabal / smlg), " ") END AS etatglobal FROM v_data_sum
+
+

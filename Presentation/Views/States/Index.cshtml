@@ -21,6 +21,9 @@
             <th class="text-right">
                 @Html.DisplayNameFor(model => model.PerKmDuration)
             </th>
+            <th class="text-right">
+                @Html.DisplayNameFor(model => model.CoeffDeg)
+            </th>
             <th></th>
         </tr>
     </thead>
@@ -35,6 +38,9 @@
             </td>
             <td class="text-right">
                 @Html.DisplayFor(modelItem => item.PerKmDuration)
+            </td>
+            <td class="text-right">
+                @Html.DisplayFor(modelItem => item.CoeffDeg)
             </td>
             <td class="text-right">
                 <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |

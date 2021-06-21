@@ -32,9 +32,10 @@ namespace BusinessLogic.Models
         [Column("perKmDuration", TypeName = "decimal(10, 2)")]
         public decimal PerKmDuration { get; set; }
 
-        [Display(Name = "Coefficient de dégradation (/Km)")]
+        [Display(Name = "Coefficient de dégradation (%)")]
         [DisplayFormat(DataFormatString = "{0} %")]
         [Column("coeffDeg", TypeName = "decimal(10, 2)")]
+        [Range(0, 10, ErrorMessage = "le coefficient doit être positif")]
         public decimal CoeffDeg { get; set; }
 
         [InverseProperty(nameof(Portion.State))]
