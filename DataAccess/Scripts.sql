@@ -1,8 +1,8 @@
 ﻿drop table Portion;
-drop table State;
-drop table Route;
-drop table City;
-go
+ drop table State;
+ drop table Route;
+ drop table City;
+ go
 
 create table City (
     id int IDENTITY(1,1) PRIMARY KEY,
@@ -35,6 +35,12 @@ create table Portion (
     state_id int NOT NULL,
     FOREIGN KEY (route_id) references Route (id),
     FOREIGN KEY (state_id) references State (id)
+);
+
+create table Budget (
+    id int IDENTITY(1, 1) PRIMARY KEY,
+    entrees DECIMAL(19, 5) NOT NULL CHECK (entrees > 0),
+    date_entree Datetime
 );
 
 ALTER TABLE City 
