@@ -6,11 +6,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using BusinessLogic.Models;
-using Microsoft.AspNetCore.Authorization;
 
 namespace Presentation.Controllers
 {
-    [Authorize(Roles = "Admin")]
     public class PortionsController : Controller
     {
         private readonly AppDbContext _context;
@@ -23,7 +21,7 @@ namespace Presentation.Controllers
         // GET: Portions
         public async Task<IActionResult> Index()
         {
-            var appDbContext = _context.Portions.Include(p => p.Route).Include(p => p.State);
+            var appDbContext = _context.Portions.Include(p => p.PreviousNavigation).Include(p => p.Route).Include(p => p.State);
             return View(await appDbContext.ToListAsync());
         }
 
@@ -36,6 +34,7 @@ namespace Presentation.Controllers
             }
 
             var portion = await _context.Portions
+                .Include(p => p.PreviousNavigation)
                 .Include(p => p.Route)
                 .Include(p => p.State)
                 .FirstOrDefaultAsync(m => m.Id == id);
@@ -50,6 +49,7 @@ namespace Presentation.Controllers
         // GET: Portions/Create
         public IActionResult Create()
         {
+            ViewData["Previous"] = new SelectList(_context.Portions, "Id", "Name");
             ViewData["RouteId"] = new SelectList(_context.Routes, "Id", "Name");
             ViewData["StateId"] = new SelectList(_context.States, "Id", "Label");
             return View();
@@ -60,40 +60,15 @@ namespace Presentation.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,StartPortion,EndPortion,RouteId,StateId")] Portion portion)
+        public async Task<IActionResult> Create([Bind("Id,Name,StartPortion,EndPortion,RouteId,StateId,Kmlength,Previous")] Portion portion)
         {
             if (ModelState.IsValid)
             {
-/*                Route route = await _context.Routes
-                    .Include(r => r.Portions)
-                    .FirstOrDefaultAsync(r => r.Id == portion.RouteId);
-
-                if (
-                    portion.StartPortion <= route.Kmlength && 
-                    portion.EndPortion <= route.Kmlength &&
-                    portion.StartPortion <= portion.EndPortion &&
-                    (portion.StartPortion >= 0 && portion.EndPortion >= 0)
-                )
-                {
-                    Portion latestPortion = route.Portions.Last();
-                    if (latestPortion.EndPortion <= portion.StartPortion)
-                    {*/
-                        _context.Add(portion);
-                        await _context.SaveChangesAsync();
-                        return RedirectToAction(nameof(Index));
-               /*     }
-                    else
-                    {
-                        ModelState.AddModelError(string.Empty, "Données entrées incohérents.");
-                        return View(portion);
-                    }
-                }
-                else
-                {
-                    ModelState.AddModelError(string.Empty, "Données entrées non valides.");
-                    return View(portion);
-                }*/
+                _context.Add(portion);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
             }
+            ViewData["Previous"] = new SelectList(_context.Portions, "Id", "Id", portion.Previous);
             ViewData["RouteId"] = new SelectList(_context.Routes, "Id", "Name", portion.RouteId);
             ViewData["StateId"] = new SelectList(_context.States, "Id", "Label", portion.StateId);
             return View(portion);
@@ -112,6 +87,7 @@ namespace Presentation.Controllers
             {
                 return NotFound();
             }
+            ViewData["Previous"] = new SelectList(_context.Portions, "Id", "Id", portion.Previous);
             ViewData["RouteId"] = new SelectList(_context.Routes, "Id", "Name", portion.RouteId);
             ViewData["StateId"] = new SelectList(_context.States, "Id", "Label", portion.StateId);
             return View(portion);
@@ -122,7 +98,7 @@ namespace Presentation.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,StartPortion,EndPortion,RouteId,StateId")] Portion portion)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,StartPortion,EndPortion,RouteId,StateId,Kmlength,Previous")] Portion portion)
         {
             if (id != portion.Id)
             {
@@ -149,6 +125,7 @@ namespace Presentation.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["Previous"] = new SelectList(_context.Portions, "Id", "Id", portion.Previous);
             ViewData["RouteId"] = new SelectList(_context.Routes, "Id", "Name", portion.RouteId);
             ViewData["StateId"] = new SelectList(_context.States, "Id", "Label", portion.StateId);
             return View(portion);
@@ -163,6 +140,7 @@ namespace Presentation.Controllers
             }
 
             var portion = await _context.Portions
+                .Include(p => p.PreviousNavigation)
                 .Include(p => p.Route)
                 .Include(p => p.State)
                 .FirstOrDefaultAsync(m => m.Id == id);

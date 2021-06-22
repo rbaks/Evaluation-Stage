@@ -4,16 +4,16 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Liste des Portions de routes</h1>
+    <h1>Liste des Portions de routes</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create">Nouvelle Portion</a>
 </p>
-<table class="table table-hover">
+<table class="table">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Route)
+                @Html.DisplayNameFor(model => model.Name)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.StartPortion)
@@ -22,7 +22,16 @@
                 @Html.DisplayNameFor(model => model.EndPortion)
             </th>
             <th>
+                @Html.DisplayNameFor(model => model.Route)
+            </th>
+            <th>
                 @Html.DisplayNameFor(model => model.State)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Kmlength)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PreviousNavigation)
             </th>
             <th></th>
         </tr>
@@ -31,7 +40,7 @@
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.Route.Name)
+                @Html.DisplayFor(modelItem => item.Name)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.StartPortion)
@@ -40,7 +49,16 @@
                 @Html.DisplayFor(modelItem => item.EndPortion)
             </td>
             <td>
+                @Html.DisplayFor(modelItem => item.Route.Name)
+            </td>
+            <td>
                 @Html.DisplayFor(modelItem => item.State.Label)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Kmlength)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PreviousNavigation.Name)
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |

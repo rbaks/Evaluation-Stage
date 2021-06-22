@@ -4,14 +4,16 @@ using BusinessLogic.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace BusinessLogic.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210621190850_EditedPortions")]
+    partial class EditedPortions
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -120,10 +122,6 @@ namespace BusinessLogic.Migrations
                         .HasColumnType("decimal(5,2)")
                         .HasColumnName("kmlength");
 
-                    b.Property<string>("Name")
-                        .HasColumnType("varchar(20)")
-                        .HasColumnName("name");
-
                     b.Property<int?>("Previous")
                         .HasColumnType("int")
                         .HasColumnName("previous");
@@ -141,10 +139,6 @@ namespace BusinessLogic.Migrations
                         .HasColumnName("state_id");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("Name")
-                        .IsUnique()
-                        .HasFilter("[name] IS NOT NULL");
 
                     b.HasIndex("Previous");
 

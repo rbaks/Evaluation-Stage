@@ -11,8 +11,7 @@ namespace BusinessLogic.Models
     {
         public AppDbContext(DbContextOptions<AppDbContext> options)
             : base(options)
-        {
-        }
+        {}
 
         public virtual DbSet<Customer> Customers { get; set; }
         public virtual DbSet<City> Cities { get; set; }
@@ -27,6 +26,10 @@ namespace BusinessLogic.Models
             builder.Entity<Etat>()
                 .HasNoKey()
                 .ToTable("Etat");
+
+            builder.Entity<Portion>()
+                .HasIndex(p => p.Name)
+                .IsUnique();
         }
     }
 }

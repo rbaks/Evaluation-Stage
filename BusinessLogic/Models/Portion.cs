@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace BusinessLogic.Models
@@ -9,6 +10,10 @@ namespace BusinessLogic.Models
         [Key]
         [Column("id")]
         public int Id { get; set; }
+
+        [Required]
+        [Column("name", TypeName = "varchar(20)")]
+        public string Name { get; set; }
 
         [Column("start_portion", TypeName = "decimal(5, 2)")]
         [Display(Name = "Debut")]
@@ -32,5 +37,20 @@ namespace BusinessLogic.Models
 
         [Display(Name = "Etat")]
         public virtual State State { get; set; }
+
+        //Modifications
+
+        [Column("kmlength", TypeName = "decimal(5, 2)")]
+        public decimal Kmlength { get; set; }
+        [Column("previous")]
+        public int? Previous { get; set; }
+
+        [Display(Name = "Portion précedée")]
+        [ForeignKey(nameof(Previous))]
+        [InverseProperty(nameof(Portion.InversePreviousNavigation))]
+        public virtual Portion PreviousNavigation { get; set; }
+
+        [InverseProperty(nameof(Portion.PreviousNavigation))]
+        public virtual ICollection<Portion> InversePreviousNavigation { get; set; }
     }
 }
