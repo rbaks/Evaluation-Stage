@@ -52,5 +52,13 @@ namespace BusinessLogic.Models
 
         [InverseProperty(nameof(Portion.PreviousNavigation))]
         public virtual ICollection<Portion> InversePreviousNavigation { get; set; }
+
+        public decimal Length 
+        { 
+            get
+            {
+                return EndPortion - StartPortion;
+            }
+        }
     }
 }

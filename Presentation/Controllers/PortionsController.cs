@@ -62,11 +62,25 @@ namespace Presentation.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Name,StartPortion,EndPortion,RouteId,StateId,Kmlength,Previous")] Portion portion)
         {
+            Route route = await _context.Routes.FindAsync(portion.RouteId);
             if (ModelState.IsValid)
             {
-                _context.Add(portion);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                if (route.Etat == "Modifiable")
+                {
+                    _context.Add(portion);
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
+                }
+                else
+                {
+                    ModelState.AddModelError(string.Empty, "La route correspondante doite être à l'etat modifiable " +
+                        "pour pouvoir y ajouter une portion");
+                    ViewData["Previous"] = new SelectList(_context.Portions, "Id", "Id", portion.Previous);
+                    ViewData["RouteId"] = new SelectList(_context.Routes, "Id", "Name", portion.RouteId);
+                    ViewData["StateId"] = new SelectList(_context.States, "Id", "Label", portion.StateId);
+                    return View(portion);
+                }
+
             }
             ViewData["Previous"] = new SelectList(_context.Portions, "Id", "Id", portion.Previous);
             ViewData["RouteId"] = new SelectList(_context.Routes, "Id", "Name", portion.RouteId);
@@ -105,12 +119,26 @@ namespace Presentation.Controllers
                 return NotFound();
             }
 
+            Route route = await _context.Routes.FindAsync(portion.RouteId);
+
             if (ModelState.IsValid)
             {
                 try
                 {
-                    _context.Update(portion);
-                    await _context.SaveChangesAsync();
+                    if (route.Etat == "Modifiable")
+                    {
+                        _context.Update(portion);
+                        await _context.SaveChangesAsync();
+                    }
+                    else
+                    {
+                        ModelState.AddModelError(string.Empty, "La route correspondante doite être à l'etat modifiable " +
+                            "pour pouvoir modifier cette portion");
+                        ViewData["Previous"] = new SelectList(_context.Portions, "Id", "Id", portion.Previous);
+                        ViewData["RouteId"] = new SelectList(_context.Routes, "Id", "Name", portion.RouteId);
+                        ViewData["StateId"] = new SelectList(_context.States, "Id", "Label", portion.StateId);
+                        return View(portion);
+                    }
                 }
                 catch (DbUpdateConcurrencyException)
                 {

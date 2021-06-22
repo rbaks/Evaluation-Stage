@@ -47,13 +47,35 @@ namespace BusinessLogic.Models
         [InverseProperty(nameof(Portion.Route))]
         public virtual ICollection<Portion> Portions { get; set; }
 
-/*        public decimal GetEtatGlobal()
+        /*        public decimal GetEtatGlobal()
+                {
+                    foreach (Portion portion in Portions)
+                    {
+                        portion.State.
+                    }
+                    return 1;
+                }*/
+        [Column("etat", TypeName = "varchar(20)")]
+        public string Etat { get; set; }
+
+        public bool isValid()
         {
-            foreach (Portion portion in Portions)
+            Portion[] portions = new Portion[Portions.Count];
+            Portions.CopyTo(portions, 0);
+
+            if (portions.Length >= 2)
             {
-                portion.State.
+                decimal totalLength = 0;
+
+                for (int i = 0; i < portions.Length - 1; i++)
+                {
+                    totalLength += portions[i].Length;
+                    if (portions[i].EndPortion > portions[i + 1].StartPortion) return false;
+                }
+                return (totalLength + portions[portions.Length - 1].Length) == Kmlength;
             }
-            return 1;
-        }*/
+            else if (portions.Length == 0) return false;
+            else return portions[0].Length == Kmlength;
+        }
     }
 }

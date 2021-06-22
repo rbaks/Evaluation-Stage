@@ -16,10 +16,13 @@
                 @Html.DisplayNameFor(model => model.Name)
             </th>
             <th>
+                @Html.DisplayNameFor(model => model.EndCityNavigation)
+            </th>
+            <th>
                 @Html.DisplayNameFor(model => model.StartCityNavigation)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.EndCityNavigation)
+                @Html.DisplayNameFor(model => model.Etat)
             </th>
             <th class="text-right">
                 @Html.DisplayNameFor(model => model.Kmlength)
@@ -34,10 +37,13 @@
                 @Html.DisplayFor(modelItem => item.Name)
             </td>
             <td>
+                @Html.DisplayFor(modelItem => item.EndCityNavigation.Name)
+            </td>
+            <td>
                 @Html.DisplayFor(modelItem => item.StartCityNavigation.Name)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.EndCityNavigation.Name)
+                @Html.DisplayFor(modelItem => item.Etat)
             </td>
             <td class="text-right">
                 @Html.DisplayFor(modelItem => item.Kmlength)

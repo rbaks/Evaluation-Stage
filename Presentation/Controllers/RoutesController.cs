@@ -6,11 +6,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using BusinessLogic.Models;
-using Microsoft.AspNetCore.Authorization;
 
 namespace Presentation.Controllers
 {
-    [Authorize(Roles = "Admin")]
     public class RoutesController : Controller
     {
         private readonly AppDbContext _context;
@@ -38,7 +36,6 @@ namespace Presentation.Controllers
             var route = await _context.Routes
                 .Include(r => r.EndCityNavigation)
                 .Include(r => r.StartCityNavigation)
-                .Include(r => r.Portions)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (route == null)
             {
@@ -61,7 +58,7 @@ namespace Presentation.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,StartCity,EndCity,Kmlength")] Route route)
+        public async Task<IActionResult> Create([Bind("Id,Name,StartCity,EndCity,Kmlength,Etat")] Route route)
         {
             if (ModelState.IsValid)
             {
@@ -97,7 +94,7 @@ namespace Presentation.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,StartCity,EndCity,Kmlength")] Route route)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,StartCity,EndCity,Kmlength,Etat")] Route route)
         {
             if (id != route.Id)
             {
@@ -165,11 +162,27 @@ namespace Presentation.Controllers
             return _context.Routes.Any(e => e.Id == id);
         }
 
-        private IActionResult Exists(string name)
+        public async Task<IActionResult> Validate(int id)
         {
-            bool exists = _context.Routes.Any(e => e.Name == name);
-            if (exists) return Json(true);
-            return Json($"Cette route existe deja.");
+            Route route = await _context.Routes
+                .Include(r => r.EndCityNavigation)
+                .Include(r => r.StartCityNavigation)
+                .Include(r => r.Portions)
+                .FirstOrDefaultAsync(m => m.Id == id);
+
+            if (route.isValid())
+            {
+                route.Etat = "Valide";
+                _context.Update(route);
+                await _context.SaveChangesAsync();
+                return View("details", route);
+            }
+            else
+            {
+                ModelState.AddModelError(string.Empty, "Les portions de la route ne sont pas" +
+                    " cohérents pour la valider.");
+                return View("details", route);
+            }
         }
     }
 }
