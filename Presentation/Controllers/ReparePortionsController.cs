@@ -6,36 +6,26 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using BusinessLogic.Models;
-using Microsoft.AspNetCore.Authorization;
-using Presentation.Models.Budget;
 
 namespace Presentation.Controllers
 {
-    [Authorize(Roles = "Admin")]
-    public class BudgetsController : Controller
+    public class ReparePortionsController : Controller
     {
         private readonly AppDbContext _context;
 
-        public BudgetsController(AppDbContext context)
+        public ReparePortionsController(AppDbContext context)
         {
             _context = context;
         }
 
-        // GET: Budgets
+        // GET: ReparePortions
         public async Task<IActionResult> Index()
         {
-            List<ReparePortion> reparations = await _context.ReparePortions.ToListAsync();
-            List<Budget> budgets = await _context.Budgets.ToListAsync();
-
-            ListBudgetViewModel listBudgetViewModel = new ListBudgetViewModel
-            {
-                Budgets = (await _context.Budgets.ToListAsync()),
-                TotalBudget = budgets.Sum(b => b.Entrees) - reparations.Sum(r => r.PrixReparation)
-            };
-            return View(listBudgetViewModel);
+            var appDbContext = _context.ReparePortions.Include(r => r.Portion);
+            return View(await appDbContext.ToListAsync());
         }
 
-        // GET: Budgets/Details/5
+        // GET: ReparePortions/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -43,39 +33,57 @@ namespace Presentation.Controllers
                 return NotFound();
             }
 
-            var budget = await _context.Budgets
+            var reparePortion = await _context.ReparePortions
+                .Include(r => r.Portion)
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (budget == null)
+            if (reparePortion == null)
             {
                 return NotFound();
             }
 
-            return View(budget);
+            return View(reparePortion);
         }
 
-        // GET: Budgets/Create
+        // GET: ReparePortions/Create
         public IActionResult Create()
         {
+            ViewData["PortionId"] = new SelectList(_context.Portions, "Id", "Name");
             return View();
         }
 
-        // POST: Budgets/Create
+        // POST: ReparePortions/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Entrees,DateEntree")] Budget budget)
+        public async Task<IActionResult> Create([Bind("Id,DateRep,PortionId")] ReparePortion model)
         {
+            Portion portion = await _context.Portions
+                .Include(p => p.State)
+                .FirstOrDefaultAsync(p => p.Id == model.PortionId);
+
             if (ModelState.IsValid)
             {
-                _context.Add(budget);
+                decimal durre = portion.GetDureeReparation();
+                decimal prix = portion.GetPrixReparation();
+
+                ReparePortion newRepare = new ReparePortion
+                {
+                    PortionId = model.PortionId,
+                    DateRep = model.DateRep,
+                    DureeReparation = durre,
+                    PrixReparation = prix
+                };
+
+                _context.Add(newRepare);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(budget);
+            ViewData["PortionId"] = new SelectList(_context.Portions, "Id", "Name", model.PortionId);
+            return View(model);
         }
 
-        // GET: Budgets/Edit/5
+        // GET: ReparePortions/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -83,22 +91,23 @@ namespace Presentation.Controllers
                 return NotFound();
             }
 
-            var budget = await _context.Budgets.FindAsync(id);
-            if (budget == null)
+            var reparePortion = await _context.ReparePortions.FindAsync(id);
+            if (reparePortion == null)
             {
                 return NotFound();
             }
-            return View(budget);
+            ViewData["PortionId"] = new SelectList(_context.Portions, "Id", "Name", reparePortion.PortionId);
+            return View(reparePortion);
         }
 
-        // POST: Budgets/Edit/5
+        // POST: ReparePortions/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Entrees,DateEntree")] Budget budget)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,DateRep,PortionId,DureeReparation,PrixReparation")] ReparePortion reparePortion)
         {
-            if (id != budget.Id)
+            if (id != reparePortion.Id)
             {
                 return NotFound();
             }
@@ -107,12 +116,12 @@ namespace Presentation.Controllers
             {
                 try
                 {
-                    _context.Update(budget);
+                    _context.Update(reparePortion);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!BudgetExists(budget.Id))
+                    if (!ReparePortionExists(reparePortion.Id))
                     {
                         return NotFound();
                     }
@@ -123,10 +132,11 @@ namespace Presentation.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(budget);
+            ViewData["PortionId"] = new SelectList(_context.Portions, "Id", "Name", reparePortion.PortionId);
+            return View(reparePortion);
         }
 
-        // GET: Budgets/Delete/5
+        // GET: ReparePortions/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -134,38 +144,31 @@ namespace Presentation.Controllers
                 return NotFound();
             }
 
-            var budget = await _context.Budgets
+            var reparePortion = await _context.ReparePortions
+                .Include(r => r.Portion)
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (budget == null)
+            if (reparePortion == null)
             {
                 return NotFound();
             }
 
-            return View(budget);
+            return View(reparePortion);
         }
 
-        // POST: Budgets/Delete/5
+        // POST: ReparePortions/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var budget = await _context.Budgets.FindAsync(id);
-            _context.Budgets.Remove(budget);
+            var reparePortion = await _context.ReparePortions.FindAsync(id);
+            _context.ReparePortions.Remove(reparePortion);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool BudgetExists(int id)
+        private bool ReparePortionExists(int id)
         {
-            return _context.Budgets.Any(e => e.Id == id);
-        }
-
-        public async Task<decimal> GetTotalBudget()
-        {
-            List<ReparePortion> reparations = await _context.ReparePortions.ToListAsync();
-            List<Budget> budgets = await _context.Budgets.ToListAsync();
-
-            return budgets.Sum(b => b.Entrees) - reparations.Sum(r => r.PrixReparation);
+            return _context.ReparePortions.Any(e => e.Id == id);
         }
     }
 }

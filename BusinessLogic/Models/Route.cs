@@ -47,6 +47,9 @@ namespace BusinessLogic.Models
         [InverseProperty(nameof(Portion.Route))]
         public virtual ICollection<Portion> Portions { get; set; }
 
+
+
+
         /*        public decimal GetEtatGlobal()
                 {
                     foreach (Portion portion in Portions)
@@ -76,6 +79,32 @@ namespace BusinessLogic.Models
             }
             else if (portions.Length == 0) return false;
             else return portions[0].Length == Kmlength;
+        }
+
+        public decimal GetPrixReparation()
+        {
+            Portion[] portions = new Portion[Portions.Count];
+            Portions.CopyTo(portions, 0);
+            decimal totalPrice = 0;
+
+            for (int i = 0; i < portions.Length - 1; i++)
+            {
+                totalPrice += portions[i].GetPrixReparation();
+            }
+            return totalPrice;
+        }
+
+        public decimal GetDureeReparation()
+        {
+            Portion[] portions = new Portion[Portions.Count];
+            Portions.CopyTo(portions, 0);
+            decimal totalDuration = 0;
+
+            for (int i = 0; i < portions.Length - 1; i++)
+            {
+                totalDuration += portions[i].GetDureeReparation();
+            }
+            return totalDuration;
         }
     }
 }

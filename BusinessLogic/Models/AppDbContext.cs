@@ -19,6 +19,7 @@ namespace BusinessLogic.Models
         public virtual DbSet<Route> Routes { get; set; }
         public virtual DbSet<State> States { get; set; }
         public virtual DbSet<Budget> Budgets { get; set; }
+        public virtual DbSet<ReparePortion> ReparePortions { get; set; }
         public virtual DbSet<Etat> Etats { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)

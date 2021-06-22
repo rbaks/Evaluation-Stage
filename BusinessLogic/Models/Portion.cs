@@ -53,12 +53,25 @@ namespace BusinessLogic.Models
         [InverseProperty(nameof(Portion.PreviousNavigation))]
         public virtual ICollection<Portion> InversePreviousNavigation { get; set; }
 
+        [InverseProperty(nameof(ReparePortion.Portion))]
+        public virtual ICollection<ReparePortion> ReparePortions { get; set; }
+
         public decimal Length 
         { 
             get
             {
                 return EndPortion - StartPortion;
             }
+        }
+
+        public decimal GetPrixReparation()
+        {
+            return State.PerKmCost* Length;
+        }
+
+        public decimal GetDureeReparation()
+        {
+            return State.PerKmDuration * Length;
         }
     }
 }

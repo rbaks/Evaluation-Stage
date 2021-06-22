@@ -4,14 +4,16 @@ using BusinessLogic.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace BusinessLogic.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210622082936_AddPrixDureeRep")]
+    partial class AddPrixDureeRep
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -176,7 +178,7 @@ namespace BusinessLogic.Migrations
                     b.ToTable("Portion");
                 });
 
-            modelBuilder.Entity("BusinessLogic.Models.ReparePortion", b =>
+            modelBuilder.Entity("BusinessLogic.Models.Reparation", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -192,19 +194,19 @@ namespace BusinessLogic.Migrations
                         .HasColumnType("DECIMAL(19,5)")
                         .HasColumnName("durree_reparation");
 
-                    b.Property<int>("PortionId")
-                        .HasColumnType("int")
-                        .HasColumnName("portion_id");
-
                     b.Property<decimal>("PrixReparation")
                         .HasColumnType("DECIMAL(19,5)")
                         .HasColumnName("prix_reparation");
 
+                    b.Property<int>("RouteId")
+                        .HasColumnType("int")
+                        .HasColumnName("route_id");
+
                     b.HasKey("Id");
 
-                    b.HasIndex("PortionId");
+                    b.HasIndex("RouteId");
 
-                    b.ToTable("Repareportion");
+                    b.ToTable("Reparation");
                 });
 
             modelBuilder.Entity("BusinessLogic.Models.Route", b =>
@@ -501,15 +503,15 @@ namespace BusinessLogic.Migrations
                     b.Navigation("State");
                 });
 
-            modelBuilder.Entity("BusinessLogic.Models.ReparePortion", b =>
+            modelBuilder.Entity("BusinessLogic.Models.Reparation", b =>
                 {
-                    b.HasOne("BusinessLogic.Models.Portion", "Portion")
-                        .WithMany("ReparePortions")
-                        .HasForeignKey("PortionId")
+                    b.HasOne("BusinessLogic.Models.Route", "Route")
+                        .WithMany("Reparations")
+                        .HasForeignKey("RouteId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Portion");
+                    b.Navigation("Route");
                 });
 
             modelBuilder.Entity("BusinessLogic.Models.Route", b =>
@@ -592,13 +594,13 @@ namespace BusinessLogic.Migrations
             modelBuilder.Entity("BusinessLogic.Models.Portion", b =>
                 {
                     b.Navigation("InversePreviousNavigation");
-
-                    b.Navigation("ReparePortions");
                 });
 
             modelBuilder.Entity("BusinessLogic.Models.Route", b =>
                 {
                     b.Navigation("Portions");
+
+                    b.Navigation("Reparations");
                 });
 
             modelBuilder.Entity("BusinessLogic.Models.State", b =>

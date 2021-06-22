@@ -1,0 +1,52 @@
+﻿@model IEnumerable<BusinessLogic.Models.ReparePortion>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Historique des reparations</h1>
+
+<p>
+    <a asp-action="Create">reparer</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.DateRep)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Portion)
+            </th>
+            <th class="text-right">
+                @Html.DisplayNameFor(model => model.DureeReparation)
+            </th>
+            <th class="text-right">
+                @Html.DisplayNameFor(model => model.PrixReparation)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.DateRep)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Portion.Name)
+            </td>
+            <td class="text-right">
+                @Html.DisplayFor(modelItem => item.DureeReparation)
+            </td>
+            <td class="text-right">
+                @Html.DisplayFor(modelItem => item.PrixReparation)
+            </td>
+            <td class="text-right">
+                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

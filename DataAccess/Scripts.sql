@@ -43,6 +43,15 @@ create table Budget (
     date_entree Datetime
 );
 
+create table Reparation (
+    id int IDENTITY(1, 1) PRIMARY KEY,
+    route_id int not null,
+    date_rep Datetime,
+    prix_reparation DECIMAL(19, 5) NOT NULL CHECK (prix_reparation > 0),
+    durree_reparation DECIMAL(19, 5) NOT NULL CHECK (durree_reparation > 0),
+    FOREIGN KEY (route_id) references Route (id)
+);
+
 ALTER TABLE City 
 ADD UNIQUE (name);
 go
