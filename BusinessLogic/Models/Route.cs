@@ -29,7 +29,7 @@ namespace BusinessLogic.Models
         [Column("end_city")]
         public int EndCity { get; set; }
 
-        [Column("kmlength", TypeName = "decimal(5, 2)")]
+        [Column("kmlength", TypeName = "decimal(19, 2)")]
         [Display(Name = "Longueur (Km)")]
         [DisplayFormat(DataFormatString = "{0:N}")]
         [Range(0, int.MaxValue)]

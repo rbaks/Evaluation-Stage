@@ -17,6 +17,10 @@
     {
       "library": "pdfmake@0.1.71",
       "destination": "wwwroot/lib/pdfmake/"
+    },
+    {
+      "library": "html2pdf.js@0.9.3",
+      "destination": "wwwroot/lib/html2pdf.js/"
     }
   ]
 }

@@ -1,49 +1,137 @@
-﻿@model BusinessLogic.Models.Route
+﻿@model Presentation.Models.Route.RouteDetailsViewModel
 
 @{
-    ViewData["Title"] = "Details";
+	ViewData["Title"] = "Details";
+}
+<div id="export">
+	<h1>Details</h1>
+	<div asp-validation-summary="All" class="text-danger"></div>
+	<div id="pdf">
+		<h4>Route</h4>
+		<a href="#" onclick="generatePDF()">Export PDF</a> |
+		<a asp-action="Validate" asp-controller="Routes" asp-route-id="@Model.Route.Id">Valider</a>
+		<hr />
+		<dl class="row">
+			<dt class="col-sm-2">
+				@Html.DisplayNameFor(model => model.Route.Name)
+			</dt>
+			<dd class="col-sm-10">
+				@Html.DisplayFor(model => model.Route.Name)
+			</dd>
+			<dt class="col-sm-2">
+				@Html.DisplayNameFor(model => model.Route.Kmlength)
+			</dt>
+			<dd class="col-sm-10">
+				@Html.DisplayFor(model => model.Route.Kmlength)
+			</dd>
+			<dt class="col-sm-2">
+				@Html.DisplayNameFor(model => model.Route.EndCityNavigation)
+			</dt>
+			<dd class="col-sm-10">
+				@Html.DisplayFor(model => model.Route.EndCityNavigation.Name)
+			</dd>
+			<dt class="col-sm-2">
+				@Html.DisplayNameFor(model => model.Route.StartCityNavigation)
+			</dt>
+			<dd class="col-sm-10">
+				@Html.DisplayFor(model => model.Route.StartCityNavigation.Name)
+			</dd>
+			<dt class="col-sm-2">
+				@Html.DisplayNameFor(model => model.Route.Etat)
+			</dt>
+			<dd class="col-sm-10">
+				@Html.DisplayFor(model => model.Route.Etat)
+			</dd>
+		</dl>
+	</div>
+
+
+	<table class="table">
+		<thead>
+			<tr>
+				<th>
+					@Html.DisplayNameFor(model => model.Portions.First().Name)
+				</th>
+				<th>
+					@Html.DisplayNameFor(model => model.Portions.First().Route)
+				</th>
+				<th>
+					@Html.DisplayNameFor(model => model.Portions.First().State)
+				</th>
+				<th class="text-right">
+					@Html.DisplayNameFor(model => model.Portions.First().StartPortion)
+				</th>
+				<th class="text-right">
+					@Html.DisplayNameFor(model => model.Portions.First().EndPortion)
+				</th>
+				<th class="text-right">
+					Durrée de réparation
+				</th>
+				<th class="text-right">
+					Prix de réparation
+				</th>
+				<th></th>
+			</tr>
+		</thead>
+		<tbody>
+			@foreach (var item in Model.Portions)
+			{
+				<tr>
+					<td>
+						@Html.DisplayFor(modelItem => item.Name)
+					</td>
+
+					<td>
+						@Html.DisplayFor(modelItem => item.Route.Name)
+					</td>
+					<td>
+						@Html.DisplayFor(modelItem => item.State.Label)
+					</td>
+					<td class="text-right">
+						@Html.DisplayFor(modelItem => item.StartPortion)
+					</td>
+					<td class="text-right">
+						@Html.DisplayFor(modelItem => item.EndPortion)
+					</td>
+					<td class="text-right">
+						@(String.Format("{0:N}", item.GetDureeReparation()))
+					</td>
+					<td class="text-right">
+						@(String.Format("{0:N}", item.GetPrixReparation()))
+					</td>
+				</tr>
+			}
+			<tr>
+				<td colspan="3"></td>
+				<td></td>
+				<td class="text-right"><b>Totaux : </b></td>
+				<td class="text-right"><b>@(String.Format("{0:N}", Model.TotalDuration)) semaines</b></td>
+				<td class="text-right"><b>@(String.Format("{0:N}", Model.TotalPrice)) Ar</b></td>
+			</tr>
+		</tbody>
+	</table>
+</div>
+
+
+@section Scripts {
+	<script src="~/lib/html2pdf.js/html2pdf.min.js"></script>
+	<script src="~/lib/html2pdf.js/html2pdf.bundle.js"></script>
+	<script>
+		function generatePDF() {
+            const element = document.getElementById("export");
+            var filename = new Date().toString() + '.pdf';
+			html2pdf().from(element).set({
+				margin: 0,
+				filename: filename,
+				/*jsPDF: {
+					orientation: 'paysage',
+					unit: 'in',
+					format: 'a4',
+					compressPDF: true
+				}*/
+			})
+				.save();
+		}
+	</script>
 }
 
-<h1>Details</h1>
-<div asp-validation-summary="All" class="text-danger"></div>
-<div>
-    <h4>Route</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Name)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Name)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Kmlength)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Kmlength)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.EndCityNavigation)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.EndCityNavigation.Name)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.StartCityNavigation)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.StartCityNavigation.Name)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Etat)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Etat)
-        </dd>
-    </dl>
-</div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a> |
-    <a asp-action="Validate" asp-route-id="@Model.Id">Valider</a>
-</div>

@@ -8,6 +8,6 @@ namespace Presentation.Models.Budget
     public class ListBudgetViewModel
     {
         public List<BusinessLogic.Models.Budget> Budgets { get; set; }
-        public decimal TotalBudget { get; set; }
+        public List<BusinessLogic.Models.ReparePortion> reparePortions { get; set; }
     }
 }

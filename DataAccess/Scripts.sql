@@ -87,6 +87,6 @@ go
 CREATE OR ALTER VIEW v_data_sum AS SELECT route_id, name, depart, arrive, SUM(lg) smlg, kmlength, (SUM(coeff * lg)) etat_gloabal FROM v_data GROUP BY route_id, name, depart, arrive, kmlength;
 go
 
-CREATE OR ALTER VIEW Etat AS SELECT CONCAT(route_id, " ") routeid, name, depart, arrive, CASE WHEN smlg = 0 THEN "--" ELSE CONCAT((etat_gloabal / smlg), " ") END AS etatglobal FROM v_data_sum
+CREATE OR ALTER VIEW Etat AS SELECT CONCAT(route_id, " ") routeid, name, depart, arrive, CASE WHEN smlg = 0 THEN "--" ELSE CONCAT(100 - (etat_gloabal / smlg), " ") END AS etatglobal FROM v_data_sum
 
 

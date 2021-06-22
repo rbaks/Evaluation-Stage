@@ -1,11 +1,13 @@
-﻿@model Presentation.Models.Budget.ListBudgetViewModel
+﻿@using BusinessLogic.Models
+@model Presentation.Models.Budget.ListBudgetViewModel
+
 
 @{
     ViewData["Title"] = "Index";
 }
 
 <h1>Entrées de budgets</h1>
-<h4>Budget Total : @(String.Format("{0:N}", Model.TotalBudget)) Ar</h4>
+<h4>Budget Total : @(String.Format("{0:N}", BusinessLogic.Models.Budget.GetTotalBudget(Model.Budgets, Model.reparePortions))) Ar</h4>
 
 <p>
     <a asp-action="Create">Entrer</a>

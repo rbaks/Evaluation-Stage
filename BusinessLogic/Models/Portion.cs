@@ -17,12 +17,14 @@ namespace BusinessLogic.Models
 
         [Column("start_portion", TypeName = "decimal(5, 2)")]
         [Display(Name = "Debut")]
+        [DisplayFormat(DataFormatString = "{0:N} Km")]
         [Range(0, int.MaxValue, ErrorMessage = "la borne doit étre positive")]
         public decimal StartPortion { get; set; }
 
         [Column("end_portion", TypeName = "decimal(5, 2)")]
         [Display(Name = "Fin")]
         [Range(0, int.MaxValue, ErrorMessage = "la borne doit étre positive")]
+        [DisplayFormat(DataFormatString = "{0:N} Km")]
         public decimal EndPortion { get; set; }
         [Column("route_id")]
         public int RouteId { get; set; }

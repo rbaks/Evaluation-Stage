@@ -6,9 +6,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using BusinessLogic.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Presentation.Controllers
 {
+    [Authorize]
     public class ReparePortionsController : Controller
     {
         private readonly AppDbContext _context;
@@ -64,20 +66,39 @@ namespace Presentation.Controllers
 
             if (ModelState.IsValid)
             {
-                decimal durre = portion.GetDureeReparation();
-                decimal prix = portion.GetPrixReparation();
-
-                ReparePortion newRepare = new ReparePortion
+                if (portion.State.Label != "Tres Bien")
                 {
-                    PortionId = model.PortionId,
-                    DateRep = model.DateRep,
-                    DureeReparation = durre,
-                    PrixReparation = prix
-                };
+                    decimal durre = portion.GetDureeReparation();
+                    decimal prix = portion.GetPrixReparation();
 
-                _context.Add(newRepare);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                    decimal totalBudget = Budget.GetTotalBudget(await _context.Budgets.ToListAsync(), await _context.ReparePortions.ToListAsync());
+
+                    if (totalBudget < prix)
+                    {
+                        ModelState.AddModelError(string.Empty, "Budget insuffisant");
+                        ViewData["PortionId"] = new SelectList(_context.Portions, "Id", "Name", model.PortionId);
+                        return View(model);
+                    }
+
+                    ReparePortion newRepare = new ReparePortion
+                    {
+                        PortionId = model.PortionId,
+                        DateRep = model.DateRep,
+                        DureeReparation = durre,
+                        PrixReparation = prix
+                    };
+                    State state = await _context.States.FirstOrDefaultAsync(s => s.Label == "Tres Bien");
+
+                    _context.Add(newRepare);
+                    portion.StateId = state.Id;
+                    _context.Update(portion);
+                    await _context.SaveChangesAsync();
+
+                    return RedirectToAction(nameof(Index));
+                }
+                ModelState.AddModelError(string.Empty, "Une portion de Bonne état n'a pas besoins d'être réparée");
+                ViewData["PortionId"] = new SelectList(_context.Portions, "Id", "Name", model.PortionId);
+                return View(model);
             }
             ViewData["PortionId"] = new SelectList(_context.Portions, "Id", "Name", model.PortionId);
             return View(model);

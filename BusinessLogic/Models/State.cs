@@ -22,20 +22,20 @@ namespace BusinessLogic.Models
         [Display(Name = "Libellé")]
         public string Label { get; set; }
 
-        [Column("perKmCost", TypeName = "decimal(10, 2)")]
+        [Column("perKmCost", TypeName = "decimal(19, 2)")]
         [Display(Name = "Prix de Maintenance (Ar/Km)")]
         [DisplayFormat(DataFormatString = "{0:N}")]
         public decimal PerKmCost { get; set; }
 
         [Display(Name = "Durée de Maintenance (/Km)")]
         [DisplayFormat(DataFormatString = "{0:N} semaines")]
-        [Column("perKmDuration", TypeName = "decimal(10, 2)")]
+        [Column("perKmDuration", TypeName = "decimal(19, 2)")]
         public decimal PerKmDuration { get; set; }
 
         [Display(Name = "Coefficient de dégradation (%)")]
         [DisplayFormat(DataFormatString = "{0} %")]
         [Column("coeffDeg", TypeName = "decimal(10, 2)")]
-        [Range(0, 10, ErrorMessage = "le coefficient doit être positif")]
+        [Range(0, 100, ErrorMessage = "le coefficient doit être positif")]
         public decimal CoeffDeg { get; set; }
 
         [InverseProperty(nameof(Portion.State))]

@@ -36,13 +36,24 @@ namespace Presentation.Controllers
             var route = await _context.Routes
                 .Include(r => r.EndCityNavigation)
                 .Include(r => r.StartCityNavigation)
+                .Include(r => r.Portions)
+                .ThenInclude(p => p.State)
                 .FirstOrDefaultAsync(m => m.Id == id);
+
+            Models.Route.RouteDetailsViewModel viewModel = new Models.Route.RouteDetailsViewModel
+            {
+                Route = route,
+                Portions = route.Portions.ToList(),
+                TotalDuration = route.Portions.Sum(p => p.GetDureeReparation()),
+                TotalPrice = route.Portions.Sum(p => p.GetPrixReparation()),
+            };
+
             if (route == null)
             {
                 return NotFound();
             }
 
-            return View(route);
+            return View(viewModel);
         }
 
         // GET: Routes/Create
@@ -168,20 +179,29 @@ namespace Presentation.Controllers
                 .Include(r => r.EndCityNavigation)
                 .Include(r => r.StartCityNavigation)
                 .Include(r => r.Portions)
+                .ThenInclude(p => p.State)
                 .FirstOrDefaultAsync(m => m.Id == id);
+
+            Models.Route.RouteDetailsViewModel viewModel = new Models.Route.RouteDetailsViewModel
+            {
+                Route = route,
+                Portions = route.Portions.ToList(),
+                TotalDuration = route.Portions.Sum(p => p.GetDureeReparation()),
+                TotalPrice = route.Portions.Sum(p => p.GetPrixReparation()),
+            };
 
             if (route.isValid())
             {
                 route.Etat = "Valide";
                 _context.Update(route);
                 await _context.SaveChangesAsync();
-                return View("details", route);
+                return View("details", viewModel);
             }
             else
             {
                 ModelState.AddModelError(string.Empty, "Les portions de la route ne sont pas" +
                     " cohérents pour la valider.");
-                return View("details", route);
+                return View("details", viewModel);
             }
         }
     }

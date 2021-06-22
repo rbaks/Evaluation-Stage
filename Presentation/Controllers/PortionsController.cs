@@ -60,13 +60,14 @@ namespace Presentation.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,StartPortion,EndPortion,RouteId,StateId,Kmlength,Previous")] Portion portion)
+        public async Task<IActionResult> Create([Bind("Id,Name,StartPortion,EndPortion,RouteId,StateId")] Portion portion)
         {
             Route route = await _context.Routes.FindAsync(portion.RouteId);
             if (ModelState.IsValid)
             {
                 if (route.Etat == "Modifiable")
                 {
+                    portion.Kmlength = (portion.EndPortion - portion.StartPortion);
                     _context.Add(portion);
                     await _context.SaveChangesAsync();
                     return RedirectToAction(nameof(Index));
@@ -112,7 +113,7 @@ namespace Presentation.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,StartPortion,EndPortion,RouteId,StateId,Kmlength,Previous")] Portion portion)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,StartPortion,EndPortion,RouteId,StateId")] Portion portion)
         {
             if (id != portion.Id)
             {
@@ -127,6 +128,7 @@ namespace Presentation.Controllers
                 {
                     if (route.Etat == "Modifiable")
                     {
+                        portion.Kmlength = (portion.EndPortion - portion.StartPortion);
                         _context.Update(portion);
                         await _context.SaveChangesAsync();
                     }

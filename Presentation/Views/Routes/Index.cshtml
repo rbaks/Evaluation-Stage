@@ -7,7 +7,7 @@
 <h1>Liste des Routes</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create">Nouvelle Route</a>
 </p>
 <table class="table">
     <thead>
@@ -16,10 +16,10 @@
                 @Html.DisplayNameFor(model => model.Name)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.EndCityNavigation)
+                @Html.DisplayNameFor(model => model.StartCityNavigation)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.StartCityNavigation)
+                @Html.DisplayNameFor(model => model.EndCityNavigation)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Etat)
@@ -37,10 +37,10 @@
                 @Html.DisplayFor(modelItem => item.Name)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.EndCityNavigation.Name)
+                @Html.DisplayFor(modelItem => item.StartCityNavigation.Name)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.StartCityNavigation.Name)
+                @Html.DisplayFor(modelItem => item.EndCityNavigation.Name)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Etat)

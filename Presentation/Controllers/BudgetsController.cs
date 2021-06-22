@@ -29,8 +29,8 @@ namespace Presentation.Controllers
 
             ListBudgetViewModel listBudgetViewModel = new ListBudgetViewModel
             {
-                Budgets = (await _context.Budgets.ToListAsync()),
-                TotalBudget = budgets.Sum(b => b.Entrees) - reparations.Sum(r => r.PrixReparation)
+                Budgets = budgets,
+                reparePortions = reparations
             };
             return View(listBudgetViewModel);
         }

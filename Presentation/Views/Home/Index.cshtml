@@ -1,8 +1,38 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Gestion de Route";
 }
 
 <div class="text-center">
     <h1 class="display-4">Gestion de Route</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    <p>ETU987 P12-B 24 Andrianina.</p>
 </div>
+
+<link href="~/lib/datatables/css/dataTables.bootstrap4.min.css" rel="stylesheet" />
+<div class="container">
+    <br />
+    <h1>Etat Global des routes</h1>
+    <div style="width:100%; margin:0 auto;">
+        <table id="customersTable" class="table dt-responsive nowrap" width="100%" cellspacing="0">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Depart</th>
+                    <th>Arrive</th>
+                    <th>Etat Global (%)</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+</div>
+@section Scripts
+{
+    <script src="~/lib/datatables/js/jquery.dataTables.min.js"></script>
+    <script src="~/lib/datatables/js/dataTables.bootstrap4.min.js"></script>
+    <script src="~/lib/datatables-buttons/js/dataTables.buttons.min.js"></script>
+    <script src="~/lib/jszip/jszip.min.js"></script>
+    <script src="~/lib/pdfmake/pdfmake.min.js"></script>
+    <script src="~/lib/pdfmake/vfs_fonts.min.js"></script>
+    <script src="~/lib/datatables-buttons/js/buttons.html5.min.js"></script>
+    <script src="~/lib/datatables-buttons/js/buttons.print.min.js"></script>
+    <script src="~/js/Customers/datatable.js"></script>
+}

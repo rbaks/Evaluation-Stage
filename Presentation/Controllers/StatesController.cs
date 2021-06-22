@@ -59,7 +59,7 @@ namespace Presentation.Controllers
         {
             if (ModelState.IsValid)
             {
-                if (state.CoeffDeg <= 0 && state.CoeffDeg <= 1)
+                if (state.CoeffDeg >= 0 && state.CoeffDeg <= 100)
                 {
                     _context.Add(state);
                     await _context.SaveChangesAsync();
@@ -96,7 +96,7 @@ namespace Presentation.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Label,PerKmCost,PerKmDuration")] State state)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Label,PerKmCost,PerKmDuration,CoeffDeg")] State state)
         {
             if (id != state.Id)
             {

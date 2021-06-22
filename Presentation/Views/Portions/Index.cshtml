@@ -16,22 +16,16 @@
                 @Html.DisplayNameFor(model => model.Name)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.StartPortion)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.EndPortion)
-            </th>
-            <th>
                 @Html.DisplayNameFor(model => model.Route)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.State)
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Kmlength)
+            <th class="text-right">
+                @Html.DisplayNameFor(model => model.StartPortion)
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.PreviousNavigation)
+            <th class="text-right">
+                @Html.DisplayNameFor(model => model.EndPortion)
             </th>
             <th></th>
         </tr>
@@ -42,30 +36,28 @@
             <td>
                 @Html.DisplayFor(modelItem => item.Name)
             </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.StartPortion)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.EndPortion)
-            </td>
+
             <td>
                 @Html.DisplayFor(modelItem => item.Route.Name)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.State.Label)
             </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Kmlength)
+            <td class="text-right">
+                @Html.DisplayFor(modelItem => item.StartPortion)
             </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.PreviousNavigation.Name)
+            <td class="text-right">
+                @Html.DisplayFor(modelItem => item.EndPortion)
             </td>
-            <td>
+            <td class="text-right">
                 <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                <a asp-action="Details" asp-route-id="@item.Id">Details</a>
+                <!--
                 <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                -->
             </td>
         </tr>
 }
+
     </tbody>
 </table>
